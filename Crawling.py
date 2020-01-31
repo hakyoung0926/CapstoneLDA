@@ -2,9 +2,13 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
+search = input("검색하고싶은 책 이름 : ")
 path = "C:/dev/chromedriver.exe"
 driver = webdriver.Chrome(path)
-driver.get('http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791162540640')
+driver.get('http://www.kyobobook.co.kr/index.laf')
+driver.find_element_by_xpath("//*[@id='searchKeyword']").send_keys(search)
+driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[1]/div[1]/form[2]/div/input").click()
+driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a").click()
 window_before = driver.window_handles[0]
 print(driver.current_url)
 driver.find_element_by_link_text("전체보기").click()
