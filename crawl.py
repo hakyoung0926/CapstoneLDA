@@ -17,32 +17,32 @@ search = input("검색하고싶은 책 이름 : ")
 path = "C:/dev/chromedriver.exe"
 
 # selenium 설정
-# driver = webdriver.Chrome(path, options=chrome_options)
+# 브라우저 백그라운드
+#driver = webdriver.Chrome(path, options=chrome_options)
+# 브라우저 백그라운드 X
 driver = webdriver.Chrome(path)
+driver.implicitly_wait(3)
 driver.get('http://www.kyobobook.co.kr/index.laf')
-time.sleep(8) # 인터넷이 느린경우 팝업이 늦게 떠서 sleep 사용
+time.sleep(5) # 인터넷이 느린경우 팝업이 늦게 떠서 sleep 사용
 if driver.window_handles[1]:
-    print("팝업이 떠있습니다 제거하겠습니다.")
+    print("팝업 제거.")
     driver.switch_to.window(driver.window_handles[1])
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
 
-# 팝업창 제거 없이
-# driver.switch_to.window(driver.window_handles[0])
-
 driver.find_element_by_xpath("//*[@id='searchKeyword']").send_keys(search)
 driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[1]/div[1]/form[2]/div/input").click()
 bookCount = 0
+books=[]
 print("-----------------------------")
 try:
-    firstBook = driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a")
-    print(firstBook.text)
+    # 검색결과가 존재하는지 확인
+    bookExist = driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a")
     for i in range(1, 6):
         try:
-            # print(str(i)+".", driver.find_element_by_xpath("/html/body/div[2]/div[1]/div[2]/div[3]/div[8]/form[1]/table/tbody/tr["+str(i)+"]/td[2]/div[2]/a/strong").text)
-            print(str(i)+".", driver.find_element_by_xpath("//*[@id='search_list']/tr["+str(i)+"]/td[2]/div[2]/a/strong").text)
-            # //*[@id="search_list"]/tr[1]/td[2]/div[2]/a
-            # //*[@id="search_list"]/tr[2]/td[2]/div[2]/a
+            bookName = driver.find_element_by_xpath("//*[@id='search_list']/tr["+str(i)+"]/td[2]/div[2]/a/strong").text
+            print(str(i)+".", bookName)
+            books.append(bookName)
             bookCount = bookCount + 1
         except NoSuchElementException:
             break
@@ -54,9 +54,7 @@ try:
             break
         else:
             continue
-    # selectedBook = driver.find_element_by_xpath("/html/body/div[2]/div[1]/div[2]/div[3]/div[8]/form[1]/table/tbody/tr["+selectNum+"]/td[2]/div[2]/a")
     selectedBook = driver.find_element_by_xpath("//*[@id='search_list']/tr["+selectNum+"]/td[2]/div[2]/a")
-    # selectedBookName = driver.find_element_by_xpath("/html/body/div[2]/div[1]/div[2]/div[3]/div[8]/form[1]/table/tbody/tr["+selectNum+"]/td[2]/div[2]/a/strong").text
     selectedBookName = driver.find_element_by_xpath("//*[@id='search_list']/tr["+selectNum+"]/td[2]/div[2]/a/strong").text
     print("선택한 책 :", selectedBookName)
     print("사용자 검색어 :", search)
