@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>962</width>
-    <height>478</height>
+    <height>379</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>토픽추출</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -87,7 +87,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>아래 입력 부분에 검색하고싶은 책을 입력하시면 리뷰 검색을 시작합니다</string>
+       <string>아래 입력 부분에 검색하고싶은 책을 입력하시고 Search Review 버튼을 누르시면 리뷰 검색을 시작합니다</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>
@@ -112,25 +112,6 @@
     <font>
      <pointsize>12</pointsize>
     </font>
-   </property>
-  </widget>
-  <widget class="QLabel" name="countNum">
-   <property name="geometry">
-    <rect>
-     <x>65</x>
-     <y>331</y>
-     <width>111</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Agency FB</family>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>숫자</string>
    </property>
   </widget>
  </widget>
