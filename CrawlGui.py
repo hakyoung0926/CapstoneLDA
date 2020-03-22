@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 from pathlib import Path
 import time
 import io
-path = "C:/dev/chromedriver.exe"
+
 search = None
 selectNum = None
 status = False
@@ -18,8 +18,8 @@ class Worker(QThread):
         global status
         global search
         global selectNum
-        global path
-        status = True
+        path = "C:/dev/chromedriver.exe"
+        print(path)
         driver = webdriver.Chrome(path)
         driver.implicitly_wait(3)
         driver.get('http://www.kyobobook.co.kr/index.laf')
@@ -48,15 +48,17 @@ class Worker(QThread):
                     break
             self.finished.emit(books)
             while True :
-                if selectNum == None:
+                if selectNum is None:
                     pass
                 else : break
-            selectedBook = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a")
-            selectedBookName = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a/strong").text
         except NoSuchElementException:
             self.finished.emit(books)
+            search = None
+            selectNum = None
+            status = False
             driver.quit()
-
+        selectedBook = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a")
+        selectedBookName = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a/strong").text
         selectedBook.click()
         window_before = driver.window_handles[0]
         try:
@@ -114,10 +116,13 @@ class Worker(QThread):
                 # driver.close()
                 driver.quit()
         print("리뷰 추출이 완료되었습니다.")
+        search = None
+        selectNum = None
         status = False
 class Form(QtWidgets.QDialog):
     def __init__(self,parent=None):
         super().__init__()
+        self.worker = Worker()
         self.ui = uic.loadUi("test.ui")
         self.ui.show()
         self.ui.search_btn.clicked.connect(self.searchBook)
@@ -128,10 +133,14 @@ class Form(QtWidgets.QDialog):
         exit()
     def searchBook(self):
         global search
-        search = self.ui.search_name.text()
-        self.worker = Worker()
-        self.worker.finished.connect(self.update_list)
-        self.worker.start()
+        global status
+        while True:
+            if status is False:
+                status = True
+                search = self.ui.search_name.text()
+                self.worker.finished.connect(self.update_list)
+                self.worker.start()
+            else : break
     def select_book(self):
         global selectNum
         # QtWidgets.QMessageBox.about(self, 'Message', self.ui.bookList.currentItem().text())
@@ -143,7 +152,8 @@ class Form(QtWidgets.QDialog):
         self.ui.bookList.clear()
         print(type(data))
         if len(data)==0:
-            QtWidgets.QMessageBox.about(self,'Message','검색 결과 없음, 다시검색 ')
+            QtWidgets.QMessageBox.about(self,'Message','검색 결과 없음, 프로그램 종료합니다 ')
+            exit()
         else:
             for i in data:
                 self.ui.bookList.addItem(str(i))
