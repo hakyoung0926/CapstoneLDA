@@ -122,7 +122,7 @@ class Worker(QThread):
 class Form(QtWidgets.QDialog):
     def __init__(self,parent=None):
         super().__init__()
-        self.worker = Worker()
+
         self.ui = uic.loadUi("test.ui")
         self.ui.show()
         self.ui.search_btn.clicked.connect(self.searchBook)
@@ -132,6 +132,7 @@ class Form(QtWidgets.QDialog):
         QtWidgets.QMessageBox.about(self, 'Message', '프로그램을 종료합니다')
         exit()
     def searchBook(self):
+        self.worker = Worker()
         global search
         global status
         while True:
