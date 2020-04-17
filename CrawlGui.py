@@ -9,15 +9,17 @@ from pathlib import Path
 import time
 import io
 
-search = None
-selectNum = None
-status = False
+search = None # 검색어
+selectNum = None # 책 선택 인덱스
+status = False # 웹 크롤링 시작 상태 True 일시 진행중 False일시 꺼짐
 class Worker(QThread):
     finished = pyqtSignal(list)
+    runCheck = pyqtSignal(bool) # 크롤링 후 팝업 띄우기용
     def run(self):
         global status
         global search
         global selectNum
+        checkend = False # False일시 진행중 True 일시 종료됨
         path = "C:/dev/chromedriver.exe"
         print(path)
         driver = webdriver.Chrome(path)
@@ -33,26 +35,29 @@ class Worker(QThread):
 
         driver.find_element_by_xpath("//*[@id='searchKeyword']").send_keys(search)
         driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[1]/div[1]/form[2]/div/input").click()
-        bookCount = 0
-        books = []
+        books = [] # 검색한 책 리스트
         try:
             bookExist = driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a")
+            # 검색한 책 찾았을 경우
             for i in range(1, 6):
                 try:
                     bookName = driver.find_element_by_xpath(
                         "//*[@id='search_list']/tr[" + str(i) + "]/td[2]/div[2]/a/strong").text
                     print(str(i) + ".", bookName)
                     books.append(bookName)
-                    bookCount = bookCount + 1
+                # 책 이름이 없을 시 반복문 종료
                 except NoSuchElementException:
                     break
-            self.finished.emit(books)
+            self.finished.emit(books) # 검색 완료 후 결과 전송(검색 결과 있음)
+
+            # 사용자가 책을 선택할 때 까지 대기
             while True :
                 if selectNum is None:
                     pass
                 else : break
         except NoSuchElementException:
-            self.finished.emit(books)
+            # 검색한 책 찾지 못했을 경우
+            self.finished.emit(books) # 검색 완료 후 결과 전송(검색 결과 없음)
             search = None
             selectNum = None
             status = False
@@ -107,22 +112,22 @@ class Worker(QThread):
                     print(reviewNum, "번째 리뷰가 저장되었습니다.")
                 f.close()
                 reviewNum = reviewNum + 1
+            # 다음페이지로 이동
             if i < len(pages):
                 driver.find_element_by_link_text(str(i + 1)).click()
+            # 마지막 페이지 크롤링 후 종료
             else:
-                f.close()
-                # driver.close()
-                # driver.switch_to.window(window_before)
-                # driver.close()
-                driver.quit()
+                break
         print("리뷰 추출이 완료되었습니다.")
         search = None
         selectNum = None
         status = False
+        checkend = True
+        self.runCheck.emit(checkend) # True 보내서 종료
+        driver.quit()
 class Form(QtWidgets.QDialog):
     def __init__(self,parent=None):
         super().__init__()
-
         self.ui = uic.loadUi("test.ui")
         self.ui.show()
         self.ui.search_btn.clicked.connect(self.searchBook)
@@ -132,33 +137,40 @@ class Form(QtWidgets.QDialog):
         QtWidgets.QMessageBox.about(self, 'Message', '프로그램을 종료합니다')
         exit()
     def searchBook(self):
-        self.worker = Worker()
         global search
         global status
-        while True:
-            if status is False:
-                status = True
-                search = self.ui.search_name.text()
-                self.worker.finished.connect(self.update_list)
-                self.worker.start()
-            else : break
+        if status is False:
+            status = True
+            self.worker = Worker()
+            search = self.ui.search_name.text()
+            self.worker.finished.connect(self.update_list)
+            self.worker.runCheck.connect(self.checkEnd)
+            self.worker.start() # 웹 크롤링 시작
     def select_book(self):
         global selectNum
         # QtWidgets.QMessageBox.about(self, 'Message', self.ui.bookList.currentItem().text())
         selectNum = self.ui.bookList.currentRow()+1
         # print(self.ui.bookList.currentRow())
         print(self.ui.bookList.currentItem().text())
+
     @pyqtSlot(list)
     def update_list(self, data):
-        self.ui.bookList.clear()
-        print(type(data))
-        if len(data)==0:
-            QtWidgets.QMessageBox.about(self,'Message','검색 결과 없음, 프로그램 종료합니다 ')
-            exit()
+        # data에 books에 있는 책 리스트가 넘어옴
+        self.ui.bookList.clear() # 초기화
+        # print(type(data))
+        # 만약 책 리스트가 비어있을 시 팝업 출력
+        if len(data) == 0:
+            QtWidgets.QMessageBox.about(self,'Message','검색 결과 없음, 다시 검색하세요  ')
+        # 책 리스트가 있을 시 bookList에 값 추가
         else:
-            for i in data:
-                self.ui.bookList.addItem(str(i))
+            # 책 이름으로 추가
+            for bookName in data:
+                self.ui.bookList.addItem(str(bookName))
 
+    # 리뷰 하나끝나면 팝업띄우기
+    @pyqtSlot(bool)
+    def checkEnd(self,data):
+        QtWidgets.QMessageBox.about(self,'Message','리뷰 추출이 완료되었습니다.')
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
