@@ -13,8 +13,8 @@
 
 
 # 웹크롤링 
-  > Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
-  > PyQt5 를 이용한 GUI 구현
+  - Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
+  - PyQt5 를 이용한 GUI 구현
 
 
 
