@@ -123,7 +123,7 @@ class Worker(QThread):
         selectNum = None
         status = False
         checkend = True
-        self.runCheck.emit(checkend) # True 보내서 종료
+        self.runCheck.emit(checkend) # True 보내면서 종료
         driver.quit()
 class Form(QtWidgets.QDialog):
     def __init__(self,parent=None):
