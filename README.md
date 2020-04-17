@@ -12,7 +12,7 @@
   - 감정분석(추가예정)
 
 
-# 웹크롤링 
+## 웹크롤링 
   - Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
   - PyQt5 를 이용한 GUI 구현
 
