@@ -8,13 +8,17 @@
 
 # 시스템
   - 웹 크롤링(CrawlGui.py)
-  - LDA(LDA_한글.R)
+  - 토픽추출(LDA_한글.R)
   - 감정분석(추가예정)
 
 
 ## 웹크롤링 
   - Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
   - PyQt5 를 이용한 GUI 구현
+
+## 토픽추출 
+  - LDA 알고리즘을 이용해 문서의 토픽 추출 
+  - R을 이용해 구현
 
 
 
