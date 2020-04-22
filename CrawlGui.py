@@ -8,34 +8,37 @@ from selenium.common.exceptions import NoSuchElementException
 from pathlib import Path
 import time
 import io
+import os
 
 search = None # 검색어
 selectNum = None # 책 선택 인덱스
-status = False # 웹 크롤링 시작 상태 True 일시 진행중 False일시 꺼짐
+status = False # 웹 크롤링 시작 상태 True : 진행중 , False : 꺼짐
 class Worker(QThread):
     finished = pyqtSignal(list)
     runCheck = pyqtSignal(bool) # 크롤링 후 팝업 띄우기용
+    reviewCheck = pyqtSignal(bool) # 리뷰 유무 확인 True : review 있음, False : 없음
     def run(self):
         global status
         global search
         global selectNum
-        checkend = False # False일시 진행중 True 일시 종료됨
+        checkend = False # False : 진행중 , True: 종료됨
+        reviewExist = None # True : review 있음, False : 없음
         path = "C:/dev/chromedriver.exe"
         print(path)
         driver = webdriver.Chrome(path)
         driver.implicitly_wait(3)
         driver.get('http://www.kyobobook.co.kr/index.laf')
-        time.sleep(2)
-
+        # time.sleep(2)
+        driver.implicitly_wait(3)
         if driver.window_handles[1]:
             print("팝업 제거.")
             driver.switch_to.window(driver.window_handles[1])
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
-
         driver.find_element_by_xpath("//*[@id='searchKeyword']").send_keys(search)
         driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[1]/div[1]/form[2]/div/input").click()
         books = [] # 검색한 책 리스트
+        driver.implicitly_wait(3)
         try:
             bookExist = driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a")
             # 검색한 책 찾았을 경우
@@ -61,7 +64,10 @@ class Worker(QThread):
             search = None
             selectNum = None
             status = False
+            checkend = True
             driver.quit()
+            # self.quit()
+            return None
         selectedBook = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a")
         selectedBookName = driver.find_element_by_xpath("//*[@id='search_list']/tr[" + str(selectNum) + "]/td[2]/div[2]/a/strong").text
         selectedBook.click()
@@ -69,9 +75,18 @@ class Worker(QThread):
         try:
             showReview = driver.find_element_by_link_text("전체보기")
             print("검색하신 책의 리뷰를 찾았습니다.")
+            reviewExist = True
         except NoSuchElementException:
             print("검색하신 책의 리뷰가 없습니다. 종료합니다")
+            reviewExist = False
+            self.reviewCheck.emit(reviewExist)
             driver.quit()
+            reviewExist = None
+            search = None
+            selectNum = None
+            status = False
+            checkend = True
+            return None
         showReview.click()
         window_after = driver.window_handles[1]
         driver.switch_to.window(window_after)
@@ -119,10 +134,15 @@ class Worker(QThread):
             else:
                 break
         print("리뷰 추출이 완료되었습니다.")
+        openPath = "./"+selectedBookName
+        openPath = os.path.realpath(openPath)
+        os.startfile(openPath)
         search = None
         selectNum = None
         status = False
         checkend = True
+        savedDir = None
+        reviewExist = None
         self.runCheck.emit(checkend) # True 보내면서 종료
         driver.quit()
 class Form(QtWidgets.QDialog):
@@ -145,6 +165,7 @@ class Form(QtWidgets.QDialog):
             search = self.ui.search_name.text()
             self.worker.finished.connect(self.update_list)
             self.worker.runCheck.connect(self.checkEnd)
+            self.worker.reviewCheck.connect(self.checkReview)
             self.worker.start() # 웹 크롤링 시작
     def select_book(self):
         global selectNum
@@ -156,8 +177,6 @@ class Form(QtWidgets.QDialog):
     @pyqtSlot(list)
     def update_list(self, data):
         # data에 books에 있는 책 리스트가 넘어옴
-        self.ui.bookList.clear() # 초기화
-        # print(type(data))
         # 만약 책 리스트가 비어있을 시 팝업 출력
         if len(data) == 0:
             QtWidgets.QMessageBox.about(self,'Message','검색 결과 없음, 다시 검색하세요  ')
@@ -172,6 +191,12 @@ class Form(QtWidgets.QDialog):
     def checkEnd(self,data):
         QtWidgets.QMessageBox.about(self,'Message','리뷰 추출이 완료되었습니다.')
         self.ui.bookList.clear()
+
+    @pyqtSlot(bool)
+    def checkReview(self,data):
+        if data == False:
+            QtWidgets.QMessageBox.about(self,'Message','리뷰가 없습니다. 종료하겠습니다.')
+            self.ui.bookList.clear()
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
