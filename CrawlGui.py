@@ -171,6 +171,7 @@ class Form(QtWidgets.QDialog):
     @pyqtSlot(bool)
     def checkEnd(self,data):
         QtWidgets.QMessageBox.about(self,'Message','리뷰 추출이 완료되었습니다.')
+        self.ui.bookList.clear()
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = Form()

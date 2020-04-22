@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
+    <width>942</width>
     <height>379</height>
    </rect>
   </property>
@@ -15,6 +15,9 @@
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -41,14 +44,14 @@
       <item>
        <widget class="QPushButton" name="search_btn">
         <property name="text">
-         <string>Search Review</string>
+         <string>리뷰 검색</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="quit_btn">
         <property name="text">
-         <string>Clear</string>
+         <string>종료</string>
         </property>
        </widget>
       </item>
@@ -71,9 +74,9 @@
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>20</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <pointsize>18</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -87,7 +90,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>아래 입력 부분에 검색하고싶은 책을 입력하시고 Search Review 버튼을 누르시면 리뷰 검색을 시작합니다</string>
+       <string>아래 입력 부분에 검색하고싶은 책을 입력하시고 리뷰 검색 버튼을 누르시면 리뷰 검색을 시작합니다</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>
@@ -102,15 +105,15 @@
   <widget class="QListWidget" name="bookList">
    <property name="geometry">
     <rect>
-     <x>445</x>
-     <y>51</y>
+     <x>420</x>
+     <y>60</y>
      <width>461</width>
-     <height>291</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>14</pointsize>
     </font>
    </property>
   </widget>
