@@ -148,7 +148,7 @@ class Worker(QThread):
 class Form(QtWidgets.QDialog):
     def __init__(self,parent=None):
         super().__init__()
-        self.ui = uic.loadUi("test.ui")
+        self.ui = uic.loadUi("gui.ui")
         self.ui.search_btn.clicked.connect(self.searchBook)
         self.ui.quit_btn.clicked.connect(self.quitGUI)
         self.ui.bookList.itemDoubleClicked.connect(self.select_book)
