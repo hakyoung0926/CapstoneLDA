@@ -27,6 +27,10 @@
   <img width="800" src="https://user-images.githubusercontent.com/58851760/80811424-da628600-8c00-11ea-9c43-df04276206e9.png">
 </div>
  
-
+## 감정분석
+ - 크롤링된 리뷰들을 감정분석
+ - R을 이용해 구현
+ - 감정사전(긍정어,부정어 사전)을 이용하여 감정분석
+ - rShiny 를 이용한 웹 시각화
 
 
