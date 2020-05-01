@@ -23,7 +23,10 @@
   - LDA 알고리즘을 이용해 리뷰의 핵심 키워드인 토픽 추출 
   - R을 이용해 구현
   - rShiny 를 이용한 결과 웹 시각화
-
+   <div>
+  <img width="600" src="https://user-images.githubusercontent.com/58851760/80810830-97ec7980-8bff-11ea-93dd-aa49d1e25969.png">
+</div>
+ 
 
 
 
