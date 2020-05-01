@@ -16,8 +16,7 @@
   - Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
   - PyQt5 를 이용한 GUI 구현
  <div>
-  <img width="500" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png"></img>
- </div>
+  <img width="500" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png"></div>
 ## 토픽추출 
   - LDA 알고리즘을 이용해 리뷰의 핵심 키워드인 토픽 추출 
   - R을 이용해 구현
