@@ -24,7 +24,7 @@
   - R을 이용해 구현
   - rShiny 를 이용한 결과 웹 시각화
    <div>
-  <img width="600" src="https://user-images.githubusercontent.com/58851760/80810830-97ec7980-8bff-11ea-93dd-aa49d1e25969.png">
+  <img width="800" src="https://user-images.githubusercontent.com/58851760/80810830-97ec7980-8bff-11ea-93dd-aa49d1e25969.png">
 </div>
  
 
