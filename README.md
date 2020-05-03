@@ -18,7 +18,9 @@
  <div>
   <img width="600" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png">
 </div>
-
+'''
+example
+'''
 ## 토픽추출 
   - LDA 알고리즘을 이용해 리뷰의 핵심 키워드인 토픽 추출 
   - R을 이용해 구현
