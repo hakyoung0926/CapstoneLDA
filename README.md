@@ -19,7 +19,7 @@
   <img width="600" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png">
 </div>
 
-  
+<설치>
 ```
     pip install webdriver
     pip install pyqt5
