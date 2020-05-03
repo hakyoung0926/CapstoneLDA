@@ -21,7 +21,7 @@
 
 - 설치
 ```
-    pip install webdriver
+    pip install selenium
     pip install pyqt5
     pip install bs4
 ```
