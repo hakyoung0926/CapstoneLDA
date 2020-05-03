@@ -19,12 +19,14 @@
   <img width="600" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png">
 </div>
 
-- 설치
+  - 설치
 ```
     pip install selenium
     pip install pyqt5
     pip install bs4
 ```
+  - 웹크롤링은 Google chrome을 사용하므로 Chrome Webdriver를 설치해야함
+    https://sites.google.com/a/chromium.org/chromedriver/downloads
 * [Selenium](https://www.selenium.dev/documentation/ko/) - 브라우저 자동화
 
 ## 토픽추출 
