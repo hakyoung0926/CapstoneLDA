@@ -21,9 +21,11 @@
 
   
 ```
-    example
+    pip install webdriver
+    pip install pyqt5
+    pip install bs4
 ```
-* [Selenium](https://www.selenium.dev/documentation/ko/)
+* [Selenium](https://www.selenium.dev/documentation/ko/) - 브라우저 자동화
 
 ## 토픽추출 
   - LDA 알고리즘을 이용해 리뷰의 핵심 키워드인 토픽 추출 
