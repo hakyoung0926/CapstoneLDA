@@ -25,7 +25,7 @@
     pip install pyqt5
     pip install bs4
 ```
-  - 웹크롤링은 Google chrome을 사용하므로 Chrome Webdriver를 설치해야함
+  - 웹크롤링은 Google chrome을 사용하므로 Chrome Webdriver를 설치해야함 <br>
     https://sites.google.com/a/chromium.org/chromedriver/downloads
 * [Selenium](https://www.selenium.dev/documentation/ko/) - 브라우저 자동화
 
