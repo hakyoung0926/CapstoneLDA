@@ -1,3 +1,5 @@
+#install.packages('formattable')
+
 rm(list=ls())
 library(plyr)
 library(stringr)
@@ -12,6 +14,7 @@ library(LDAvis)
 library(servr)
 library(LDAvisData)
 library(MASS)
+library(formattable)
 #Sys.setlocale(category = "LC_CTYPE", locale = "ko_KR.UTF-8")
 
 require(showtext) #R샤이니에서 한글 안깨지게 하는 코드
@@ -70,7 +73,10 @@ result$remark[result$score >=1] = "긍정"
 result$remark[result$score ==0] = "중립"
 result$remark[result$score < 0] = "부정"
 
-sentiment_result= table(result$remark)  #여기까지 감정분석
+sentiment_result= table(result$remark)
+sentiment_percent= round(sentiment_result/sum(sentiment_result)*100, 2) # 백분율로 환산
+# ----------------------------------------------------------------------------여기까지 감정분석
+#sentiment_percent
 
 library(tm) # 텍스트 마이닝 패키지 
 stop_words <- stopwords("SMART") # 패키지에서 지원하는 불용어 목록
@@ -227,7 +233,7 @@ data(TwentyNewsgroups, package = "LDAvis")
 ui <- shinyUI(
   fluidPage(tabsetPanel( #r샤이니를 이용하여 웹으로 결과 나타내는 부분
     tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart') ), 
-    tabPanel("sentimental", mainPanel(plotOutput(outputId = "sentiment_result")))
+    tabPanel("sentimental analysis", mainPanel(plotOutput(outputId = "sentiment_result")))
   ))
 )
 
@@ -244,8 +250,8 @@ server <- shinyServer(function(input, output, session) {
       
     } 
   })
-  output$sentiment_result <- renderPlot({pie(sentiment_result, main="감성분석 결과",
-                                             col=c("dodger blue","Orange Red 2","dark olive green 3"), radius=0.8)})
+  output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
+                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=0.8)})
 })
 
 shinyApp(ui = ui, server = server)
