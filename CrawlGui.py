@@ -26,9 +26,9 @@ class Worker(QThread):
         path = "C:/dev/chromedriver.exe"
         print(path)
         driver = webdriver.Chrome(path)
-        driver.implicitly_wait(3)
+        driver.implicitly_wait(5)
         driver.get('http://www.kyobobook.co.kr/index.laf')
-        # time.sleep(2)
+        time.sleep(3)
         driver.implicitly_wait(3)
         if driver.window_handles[1]:
             print("팝업 제거.")
