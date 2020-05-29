@@ -13,6 +13,7 @@ import os
 search = None # 검색어
 selectNum = None # 책 선택 인덱스
 status = False # 웹 크롤링 시작 상태 True : 진행중 , False : 꺼짐
+bookContent =None
 class Worker(QThread):
     finished = pyqtSignal(list)
     runCheck = pyqtSignal(bool) # 크롤링 후 팝업 띄우기용
@@ -21,6 +22,7 @@ class Worker(QThread):
         global status
         global search
         global selectNum
+        global bookContent
         checkend = False # False : 진행중 , True: 종료됨
         reviewExist = None # True : review 있음, False : 없음
         path = "C:/dev/chromedriver.exe"
@@ -75,6 +77,9 @@ class Worker(QThread):
         try:
             showReview = driver.find_element_by_link_text("전체보기")
             print("검색하신 책의 리뷰를 찾았습니다.")
+            # bookContent = driver.find_element_by_xpath("//*[@id='container']/div[5]/div[1]/div[3]/div[3]").text
+            bookContent = driver.find_elements_by_class_name("box_detail_article")[0].text
+            print(bookContent)
             reviewExist = True
         except NoSuchElementException:
             print("검색하신 책의 리뷰가 없습니다. 종료합니다")
@@ -190,6 +195,7 @@ class Form(QtWidgets.QDialog):
     @pyqtSlot(bool)
     def checkEnd(self,data):
         QtWidgets.QMessageBox.about(self,'Message','리뷰 추출이 완료되었습니다.')
+        self.ui.bookContent.setText(bookContent)
         self.ui.bookList.clear()
 
     @pyqtSlot(bool)
