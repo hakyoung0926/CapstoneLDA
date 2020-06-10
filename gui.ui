@@ -43,6 +43,10 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="search_btn">
+        <property name="styleSheet">
+         <string notr="true">font: 10pt &quot;Agency FB&quot;;
+background-color: rgb(46, 255, 0);</string>
+        </property>
         <property name="text">
          <string>리뷰 검색</string>
         </property>
@@ -50,6 +54,13 @@
       </item>
       <item>
        <widget class="QPushButton" name="quit_btn">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 0, 0);
+font: 10pt &quot;Agency FB&quot;;</string>
+        </property>
         <property name="text">
          <string>종료</string>
         </property>
@@ -106,9 +117,9 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>60</y>
+     <y>90</y>
      <width>461</width>
-     <height>241</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="font">
@@ -184,6 +195,27 @@
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>60</y>
+     <width>461</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>책 목록(상위 5개)</string>
    </property>
   </widget>
  </widget>
