@@ -45,7 +45,7 @@
        <widget class="QPushButton" name="search_btn">
         <property name="styleSheet">
          <string notr="true">font: 10pt &quot;Agency FB&quot;;
-background-color: rgb(46, 255, 0);</string>
+</string>
         </property>
         <property name="text">
          <string>리뷰 검색</string>
@@ -58,8 +58,7 @@ background-color: rgb(46, 255, 0);</string>
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 0, 0);
-font: 10pt &quot;Agency FB&quot;;</string>
+         <string notr="true">font: 10pt &quot;Agency FB&quot;;</string>
         </property>
         <property name="text">
          <string>종료</string>
@@ -85,9 +84,9 @@ font: 10pt &quot;Agency FB&quot;;</string>
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>18</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
+        <pointsize>16</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
