@@ -139,6 +139,9 @@ class Worker(QThread):
             else:
                 break
         print("리뷰 추출이 완료되었습니다.")
+        with open(savedDir+"content.txt","w",encoding="cp949",errors='ignore') as f:
+            f.write(bookContent)
+        f.close()
         openPath = "./"+selectedBookName
         openPath = os.path.realpath(openPath)
         os.startfile(openPath)
