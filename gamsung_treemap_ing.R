@@ -1,26 +1,24 @@
-#install.packages('KoNLP')
-#install.packages('tm')
-#install.packages('stringr')
-#install.packages('lda')
-#install.packages('topicmodels')
-#install.packages('LDAvis')
-#install.packages('servr')
-#install.packages('LDAvisData')
-#install.packages("devtools")
-#install.packages('shiny')
-#install.packages('devtools')
-#install.packages('digest')
-#install.packages('jsonlite')
-#install.packages('glue')
-#install.packages('pkgbuild')
-#install.packages('usethis')
-#devtools::install_github("lchiffon/wordcloud2")
-#install.packages("treemap")
-#install.packages("plyr")
-#install.packages("devtools")
-#devtools::install_github("cpsievert/LDAvisData")
+#system("defaults write org.R-project.R force.LANG Ko_KR.UTF-8")
+# install.packages('KoNLP')
+# install.packages('tm')
+# install.packages('stringr')
+# install.packages('lda')
+# install.packages('topicmodels')
+# install.packages('LDAvis')
+# install.packages('servr')
+# install.packages('LDAvisData')
+# install.packages("devtools")
+# install.packages('shiny')
+# install.packages('devtools')
+# install.packages('digest')
+# install.packages('jsonlite')
+# install.packages('glue')
+# install.packages('pkgbuild')
+# install.packages('usethis')
+# devtools::install_github("lchiffon/wordcloud2")
+# install.packages("treemap")
 
-#rm(list=ls())
+rm(list=ls())
 library(plyr)
 library(stringr)
 library(shiny)
@@ -38,7 +36,7 @@ library(wordcloud)
 library(wordcloud2)
 library(RColorBrewer)
 library(treemap)
-#Sys.setlocale("LC_ALL", "korean")
+
 
 require(showtext) #R샤이니에서 한글 안깨지게 하는 코드
 font_add_google(name='Nanum Gothic', regular.wt=400,bold.wt=700)
@@ -49,9 +47,9 @@ setwd("C:/Users/Welcomeonboardboy/Documents/sentimental") #불러들일경로 (n
 #txt<-readLines("15.txt",warn=FALSE) #감정분석할 텍스트파일 불러오기
 
 path <- file.path("C:/Users/Welcomeonboardboy/Documents/sentimental")  # 폴더 경로를 객체로 만든다
-kor <- list.files(file.path(path, "스스로 행복하라"))  #폴더 경로 중 eng라는 폴더에 있는 파일들 이름을 list-up해서 객체로 만든다.
-kor.files <- file.path(path, "스스로 행복하라", kor)   #아까 list-up한 파일의 이름들로 폴더의 경로를 다시 객체로 만든다.
-content<- readLines(file.path(path,"스스로 행복하라/content.txt"))          # content를 따로 저장  
+kor <- list.files(file.path(path, "example"))  #폴더 경로 중 eng라는 폴더에 있는 파일들 이름을 list-up해서 객체로 만든다.
+kor.files <- file.path(path, "example", kor)   #아까 list-up한 파일의 이름들로 폴더의 경로를 다시 객체로 만든다.
+content<- readLines(file.path(path,"example/content.txt"))          # content를 따로 저장  
 #all.files <- c(kor.files, eng.files) 다른 폴더에 있는 파일과 같이 돌릴때 사용
 txt <- lapply(kor.files, readLines)    #txt에 이름을 붙여서 새 객체 생성
 topic <- setNames(txt, kor.files)      # 텍스트 파일의 목록만큼 데이터를 읽어오고, 그 결과를 list 형태로 저장
@@ -132,6 +130,11 @@ topic <- gsub("것같", "", topic)
 topic <- gsub("되었", "", topic)
 topic <- gsub("없으", "", topic)
 topic <- gsub("이렇", "", topic)
+topic <- gsub("있도", "", topic)
+topic <- gsub("김수", "", topic)
+topic <- gsub("하게", "", topic)
+topic <- gsub("많았", "", topic)
+topic <- gsub("말해", "", topic)
 topic <- gsub("[A-Za-z]","",topic) 
 doc.list <- strsplit(topic, "[[:space:]]+")
 
@@ -148,7 +151,8 @@ term.table <- sort(term.table, decreasing = TRUE)
 
 # remove terms that are stop words or occur fewer than 5 times:
 # 불용어 또는 5회 미만으로 언급된 단어들을 제거
-del <- names(term.table) %in% stop_words | term.table < 5
+#del <- names(term.table) %in% stop_words | term.table < 5
+del <- term.table < 5
 term.table <- term.table[!del]
 vocab <- names(term.table)
 #write.table(vocab,"아몬드.txt",sep="\t",row.names=FALSE)
@@ -172,7 +176,6 @@ doc.length <- sapply(documents, function(x) sum(x[2, ]))  # number of tokens(단
 N <- sum(doc.length)  # total number of tokens in the data (546,827)
 
 term.frequency <- as.integer(term.table)  # frequencies of terms in the corpus [8939, 5544, 2411, 2410, 2143, ...]
-
 # MCMC and model tuning parameters:
 # MCMC 및 모델 튜닝 매개 변수
 K <- 3  # 토픽의 개수 설정 
@@ -196,6 +199,30 @@ fit <- lda.collapsed.gibbs.sampler(documents = documents, K = K, vocab = vocab,
                                    num.iterations = G, alpha = alpha, 
                                    eta = eta, initial = NULL, burnin = 0,
                                    compute.log.likelihood = TRUE)
+
+
+#----------------------------------------------------------------------------------------------------------------------
+# 토픽 단어들을 단어 감성사전과 매칭
+topicwords <- top.topic.words(fit$topics, 20, by.score = TRUE)  # 토픽별로 상위 20개 단어뽑기
+topicwords<-c(topicwords[,1],topicwords[,3],topicwords[,3])     # 단어들 리스트로 합치기
+
+search<- names(term.table) %in% topicwords                      # 빈도수 테이블에서 단어 검사
+newterm.table <- term.table[search]                             # 단어와 빈도수로 새로운 테이블 생성
+
+new_sentiment <- readLines("단어 감성사전.txt")
+new_sentiment=new_sentiment[-1]
+
+newterm.data<-data.frame(newterm.table)
+newterm.vec<-rep(newterm.data$doc.list)
+
+sent.matches = match(newterm.vec, new_sentiment)          # 단어를 matching
+sent.matches = !is.na(sent.matches)            # NA 제거, 위치(숫자)만 추출
+
+sent.table<-newterm.table[sent.matches]                # 단어와 빈도수로 새로운 테이블 생성
+sent.frequency <- as.integer(sent.table)
+#length(sent.table)
+#---------------------------------------------------------------------------------------------------------------------
+
 t2 <- Sys.time()
 t2 - t1  # about 24 minutes on laptop
 
@@ -243,6 +270,7 @@ json <- createJSON(phi = result$phi,
                    term.frequency = result$term.frequency,encoding='UTF-8')
 
 serVis(json, out.dir = 'vis', open.browser = TRUE)
+
 #----------------------------------------------------------------------------------------------------------------------------
 # wordCloud <- wordcloud(
 #   names(term.table),
@@ -258,25 +286,6 @@ serVis(json, out.dir = 'vis', open.browser = TRUE)
 #-----------------------------------------------------------------------------------------------------------------------------
 
 data(TwentyNewsgroups, package = "LDAvis")
-
-# ui <- fluidPage( tabsetPanel( #r샤이니를 이용하여 웹으로 결과 나타내는 부분
-#   tabPanel("topic","content" ),
-#   tabPanel("sentimental", mainPanel(plotOutput(outputId = "sentiment_result")))
-# ))
-# 
-# server <- function(input,output){
-#   output$sentiment_result <- renderPlot({pie(sentiment_result, main="감성분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"), radius=0.8)})
-# }
-
-# shinyApp(ui=ui,server=server) ctrl+shift+c 주석
-
-#  ui <- shinyUI(
-#    fluidPage(tabsetPanel( #r샤이니를 이용하여 웹으로 결과 나타내는 부분
-#      tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart') ),
-#      tabPanel("sentimental analysis", mainPanel(plotOutput(outputId = "sentiment_result"))),
-#      tabPanel("content", mainPanel(textOutput("content")))
-#    ))
-# )
 
 ui <- fluidPage(
   # App title ----
@@ -317,23 +326,24 @@ server <- shinyServer(function(input, output, session) {
     } 
   })
   output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
-                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=1)})
+                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=1,cex=0.5)})
   
   output$content<-renderText(content)
   
   output$treemap <- renderPlot({
-    dset<-data.frame(group=names(term.table), value=term.frequency)#괄호안에 데이터셋 넣으면됨()
+    dset<-data.frame(keywords=names(sent.table), 감정=sent.frequency)#괄호안에 데이터셋 넣으면됨()
     
     treemap(dset
-            ,index=c("group")#괄호안에 "키워드" 로 바꾸면됨
-            ,vSize=c("value") # 타일의 크기 (언급횟수로 바꾸면 됨)
-            ,vColor=c("value") # 타일의 컬러
+            ,index=c("keywords")#괄호안에 "키워드" 로 바꾸면됨
+            ,vSize=c("감정") # 타일의 크기 (언급횟수로 바꾸면 됨)
+            ,vColor=c("감정") # 타일의 컬러
             ,type="value" # 타일 컬러링 방법
             ,fontsize.labels = 9
             ,fontface.labels = c("bold")
-            ,fontfamily.labels = "nanumgothic"
+            ,fontfamily.labels = "Nanum Gothic"
             ,palette = "BuGn" #위에서 받은 팔레트 정보 입력
-            ,border.col = "white") # 레이블의 배경색
+            ,border.col = "white"
+            ,title = "주요 단어") # 레이블의 배경색
   })
 })
 
