@@ -16,7 +16,7 @@
   - Selenium, BeautifulSoup4 을 이용한 크롤링 자동화 
   - PyQt5 를 이용한 GUI 구현
  <div>
-  <img width="600" src="https://user-images.githubusercontent.com/43024383/80808116-c8c9b000-8bf9-11ea-953f-99304b275353.png">
+  <img width="600" src="https://user-images.githubusercontent.com/43024383/84509720-13614080-acff-11ea-8dea-5117f51cfbc0.png">
 </div>
 
   - 설치
