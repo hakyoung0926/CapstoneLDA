@@ -1,16 +1,26 @@
-# install.packages('KoNLP')
-# install.packages('tm')
-# install.packages('stringr')
-# install.packages('lda')
-# install.packages('topicmodels')
-# install.packages('LDAvis')
-# install.packages('servr')
+#install.packages('KoNLP')
+#install.packages('tm')
+#install.packages('stringr')
+#install.packages('lda')
+#install.packages('topicmodels')
+#install.packages('LDAvis')
+#install.packages('servr')
 #install.packages('LDAvisData')
-# install.packages("devtools")
-# install.packages('shiny')
+#install.packages("devtools")
+#install.packages('shiny')
+#install.packages('devtools')
+#install.packages('digest')
+#install.packages('jsonlite')
+#install.packages('glue')
+#install.packages('pkgbuild')
+#install.packages('usethis')
+#devtools::install_github("lchiffon/wordcloud2")
 #install.packages("treemap")
+#install.packages("plyr")
+#install.packages("devtools")
+#devtools::install_github("cpsievert/LDAvisData")
 
-rm(list=ls())
+#rm(list=ls())
 library(plyr)
 library(stringr)
 library(shiny)
@@ -24,18 +34,21 @@ library(LDAvis)
 library(servr)
 library(LDAvisData)
 library(MASS)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
 library(treemap)
-Sys.setlocale(category = "LC_CTYPE", locale = "ko_KR.UTF-8")
+#Sys.setlocale("LC_ALL", "korean")
 
 require(showtext) #R샤이니에서 한글 안깨지게 하는 코드
 font_add_google(name='Nanum Gothic', regular.wt=400,bold.wt=700)
 showtext_auto()
 showtext_opts(dpi=112)
 
-setwd("/Users/welcomeonboardboy/Documents/gamsung") #불러들일경로 (negative,positive.txt여기에있어야함)
+setwd("C:/Users/Welcomeonboardboy/Documents/sentimental") #불러들일경로 (negative,positive.txt여기에있어야함)
 #txt<-readLines("15.txt",warn=FALSE) #감정분석할 텍스트파일 불러오기
 
-path <- file.path("/Users/welcomeonboardboy/Documents/gamsung")  # 폴더 경로를 객체로 만든다
+path <- file.path("C:/Users/Welcomeonboardboy/Documents/sentimental")  # 폴더 경로를 객체로 만든다
 kor <- list.files(file.path(path, "스스로 행복하라"))  #폴더 경로 중 eng라는 폴더에 있는 파일들 이름을 list-up해서 객체로 만든다.
 kor.files <- file.path(path, "스스로 행복하라", kor)   #아까 list-up한 파일의 이름들로 폴더의 경로를 다시 객체로 만든다.
 content<- readLines(file.path(path,"스스로 행복하라/content.txt"))          # content를 따로 저장  
@@ -115,14 +128,18 @@ topic <- gsub("때문", "", topic)
 topic <- gsub("않았", "", topic)
 topic <- gsub("있었", "", topic)
 topic <- gsub("그렇", "", topic)
+topic <- gsub("것같", "", topic)
+topic <- gsub("되었", "", topic)
+topic <- gsub("없으", "", topic)
+topic <- gsub("이렇", "", topic)
+topic <- gsub("[A-Za-z]","",topic) 
 doc.list <- strsplit(topic, "[[:space:]]+")
 
 # 명사 추출
 useSejongDic()  # 세종 사전 사용
 doc.list <- sapply(doc.list, extractNoun, USE.NAMES=F)
 doc.list <- unlist(doc.list)
-doc.list <- Filter(function(x){nchar(x)>1}, doc.list) 
-doc.list
+doc.list <- Filter(function(x){nchar(x)>1}, doc.list)
 
 # compute the table of terms:
 # 저장한 용어를 테이블 형식으로 저장
@@ -226,7 +243,19 @@ json <- createJSON(phi = result$phi,
                    term.frequency = result$term.frequency,encoding='UTF-8')
 
 serVis(json, out.dir = 'vis', open.browser = TRUE)
+#----------------------------------------------------------------------------------------------------------------------------
+# wordCloud <- wordcloud(
+#   names(term.table),
+#   freq=term.table,
+#   scale=c(5,0.2), #빈도가 가장 큰 단어와 가장 빈도가 작은단어 폰사 사이 크기
+#   rot.per=0.1, #90도 회전해서 보여줄 단어 비율
+#   min.freq=3, max.words=100, # 빈도 3이상, 100미만
+#   random.order=F, # True : 랜덤배치, False : 빈도수가 큰단어를 중앙에 배치
+#   random.color=T, # True : 색랜덤, False : 빈도순
+#   colors=brewer.pal(11, "Paired"), #11은 사용할 색상개수, 두번째는 색상타입이름
+#   family="font")
 
+#-----------------------------------------------------------------------------------------------------------------------------
 
 data(TwentyNewsgroups, package = "LDAvis")
 
@@ -238,17 +267,41 @@ data(TwentyNewsgroups, package = "LDAvis")
 # server <- function(input,output){
 #   output$sentiment_result <- renderPlot({pie(sentiment_result, main="감성분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"), radius=0.8)})
 # }
-# 
+
 # shinyApp(ui=ui,server=server) ctrl+shift+c 주석
 
-data(TwentyNewsgroups, package = "LDAvis")
-ui <- shinyUI(
-  fluidPage(tabsetPanel( #r샤이니를 이용하여 웹으로 결과 나타내는 부분
-    tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart') ), 
-    tabPanel("sentimental analysis", mainPanel(plotOutput(outputId = "sentiment_result","treemap",width = "100%",height = 294))),
-    tabPanel("content", mainPanel(textOutput("content")))
-  ))
-)
+#  ui <- shinyUI(
+#    fluidPage(tabsetPanel( #r샤이니를 이용하여 웹으로 결과 나타내는 부분
+#      tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart') ),
+#      tabPanel("sentimental analysis", mainPanel(plotOutput(outputId = "sentiment_result"))),
+#      tabPanel("content", mainPanel(textOutput("content")))
+#    ))
+# )
+
+ui <- fluidPage(
+  # App title ----
+  titlePanel("Review Analysis System"),
+  
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+      "summary",textOutput("content"), br()),
+    
+    mainPanel(
+      
+      # Output: Tabset w/ plot, summary, and table ----
+      tabsetPanel(type = "tabs",
+                  tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart')),
+                  tabPanel("sentimental analysis", 
+                           splitLayout(
+                             style = "border: 1px solid silver;",
+                             cellArgs = list(style = "padding: 4px"), 
+                             cellWidths = 350,
+                             plotOutput(outputId = "sentiment_result"),plotOutput(outputId = "treemap")))
+      )
+      
+    )))
 
 server <- shinyServer(function(input, output, session) {
   output$myChart <- renderVis({
@@ -264,23 +317,22 @@ server <- shinyServer(function(input, output, session) {
     } 
   })
   output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
-                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=0.8)})
+                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=1)})
   
   output$content<-renderText(content)
   
   output$treemap <- renderPlot({
-    dset<-data.frame(GNI2014)#괄호안에 데이터셋 넣으면됨()
-    pal = brewer.pal(n=12,name="set2")
-    data(GNI2014) # 예시데이터 불러오기
-    str(GNI2014) # 예시데이터 내용보기
+    dset<-data.frame(group=names(term.table), value=term.frequency)#괄호안에 데이터셋 넣으면됨()
+    
     treemap(dset
-            ,index=c("continent")#괄호안에 "키워드" 로 바꾸면됨
-            ,vSize="population" # 타일의 크기 (언급횟수로 바꾸면 됨)
-            ,vColor="GNI" # 타일의 컬러
+            ,index=c("group")#괄호안에 "키워드" 로 바꾸면됨
+            ,vSize=c("value") # 타일의 크기 (언급횟수로 바꾸면 됨)
+            ,vColor=c("value") # 타일의 컬러
             ,type="value" # 타일 컬러링 방법
-            ,fontsize.labels = 12
+            ,fontsize.labels = 9
+            ,fontface.labels = c("bold")
             ,fontfamily.labels = "nanumgothic"
-            ,palette = pal #위에서 받은 팔레트 정보 입력
+            ,palette = "BuGn" #위에서 받은 팔레트 정보 입력
             ,border.col = "white") # 레이블의 배경색
   })
 })
