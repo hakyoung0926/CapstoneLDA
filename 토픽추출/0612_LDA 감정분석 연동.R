@@ -286,39 +286,47 @@ ui <- fluidPage(
       # Output: Tabset w/ plot, summary, and table ----
       tabsetPanel(type = "tabs",
                   tabPanel("topic", sliderInput("nTerms", "Number of terms to display", min = 20, max = 40, value = 30), visOutput('myChart')),
-                  tabPanel("sentimental analysis", mainPanel(plotOutput(outputId = "sentiment_result")))
+                  tabPanel("sentimental analysis", 
+                           splitLayout(
+                             style = "border: 1px solid silver;",
+                             cellArgs = list(style = "padding: 6px"), 
+                             plotOutput(outputId = "sentiment_result"),plotOutput(outputId = "treemap")))
       )
 
 )))
 
 server <- shinyServer(function(input, output, session) {
-  output$myChart <- renderVis({
-    if(!is.null(input$nTerms)){
-      with(result, 
-           createJSON(phi = result$phi, 
-                      theta = result$theta, 
-                      doc.length = result$doc.length, 
-                      vocab = result$vocab, 
-                      term.frequency = result$term.frequency,encoding='UTF-8'))
+    output$myChart <- renderVis({
+      if(!is.null(input$nTerms)){
+        with(result, 
+             createJSON(phi = result$phi, 
+                        theta = result$theta, 
+                        doc.length = result$doc.length, 
+                        vocab = result$vocab, 
+                        term.frequency = result$term.frequency,encoding='UTF-8'))
+        
+        
+      } 
+    })
+    output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
+                                               label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=0.8)})
+    
+    output$content<-renderText(content)
+    
+    output$treemap <- renderPlot({
+      dset<-data.frame(group=names(term.table), value=term.frequency)#괄호안에 데이터셋 넣으면됨()
+      pal = brewer.pal(n=12,name="Set3")
       
-      
-    } 
-  })
-  output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
-                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=0.8)})
-  
-  # output$wordCloud<- renderWordcloud2({wordcloud(
-  #   names(term.table),
-  #   freq=term.table,
-  #   scale=c(5,0.2), #빈도가 가장 큰 단어와 가장 빈도가 작은단어 폰사 사이 크기
-  #   rot.per=0.1, #90도 회전해서 보여줄 단어 비율
-  #   min.freq=3, max.words=100, # 빈도 3이상, 100미만
-  #   random.order=F, # True : 랜덤배치, False : 빈도수가 큰단어를 중앙에 배치
-  #   random.color=T, # True : 색랜덤, False : 빈도순
-  #   colors=brewer.pal(11, "Paired"), #11은 사용할 색상개수, 두번째는 색상타입이름
-  #   family="font")})
-  
-  output$content<-renderText(content)
+      treemap(dset
+              ,index=c("group")#괄호안에 "키워드" 로 바꾸면됨
+              ,vSize=c("value") # 타일의 크기 (언급횟수로 바꾸면 됨)
+              ,vColor=c("value") # 타일의 컬러
+              ,type="value" # 타일 컬러링 방법
+              ,fontsize.labels = 12
+              ,fontfamily.labels = "nanumgothic"
+              ,palette = pal #위에서 받은 팔레트 정보 입력
+              ,border.col = "white") # 레이블의 배경색
+    })
 })
 
 shinyApp(ui = ui, server = server)
