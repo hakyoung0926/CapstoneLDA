@@ -125,14 +125,18 @@ topic <- gsub("때문", "", topic)
 topic <- gsub("않았", "", topic)
 topic <- gsub("있었", "", topic)
 topic <- gsub("그렇", "", topic)
+topic <- gsub("것같", "", topic)
+topic <- gsub("되었", "", topic)
+topic <- gsub("없으", "", topic)
+topic <- gsub("이렇", "", topic)
+topic <- gsub("[A-Za-z]","",topic) 
 doc.list <- strsplit(topic, "[[:space:]]+")
 
 # 명사 추출
 useSejongDic()  # 세종 사전 사용
 doc.list <- sapply(doc.list, extractNoun, USE.NAMES=F)
 doc.list <- unlist(doc.list)
-doc.list <- Filter(function(x){nchar(x)>1}, doc.list) 
-#doc.list
+doc.list <- Filter(function(x){nchar(x)>1}, doc.list)
 
 # compute the table of terms:
 # 저장한 용어를 테이블 형식으로 저장
