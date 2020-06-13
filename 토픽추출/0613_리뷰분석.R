@@ -342,9 +342,8 @@ server <- shinyServer(function(input, output, session) {
             ,fontsize.labels = 9
             ,fontface.labels = c("bold")
             ,fontfamily.labels = "wqy-microhei"
-            ,palette = "BuGn" #위에서 받은 팔레트 정보 입력
+            ,palette = "GnBu" #위에서 받은 팔레트 정보 입력
             ,border.col = "white") # 레이블의 배경색
   })
 })
-
 shinyApp(ui = ui, server = server)
