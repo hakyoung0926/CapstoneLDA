@@ -305,7 +305,6 @@ ui <- fluidPage(
                            splitLayout(
                              style = "border: 1px solid silver;",
                              cellArgs = list(style = "padding: 4px"), 
-                             cellWidths = 350,
                              plotOutput(outputId = "sentiment_result"),plotOutput(outputId = "treemap")))
       )
       
@@ -324,19 +323,22 @@ server <- shinyServer(function(input, output, session) {
       
     } 
   })
-  output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("dodger blue","Orange Red 2","dark olive green 3"),
-                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"), radius=1)})
+  output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("skyblue2","lightcoral","palegreen2"),
+                                             label=paste(names(sentiment_percent),'', sentiment_percent,"%"),
+                                             border = FALSE, radius=1)})
   
   output$content<-renderText(content)
   
   output$treemap <- renderPlot({
-    dset<-data.frame(keywords=names(sent.table), 감정=sent.frequency)#괄호안에 데이터셋 넣으면됨()
+    dset<-data.frame(keywords=names(sent.table), sentiment=sent.frequency)#괄호안에 데이터셋 넣으면됨()
     
     treemap(dset
             ,index=c("keywords")#괄호안에 "키워드" 로 바꾸면됨
-            ,vSize=c("감정") # 타일의 크기 (언급횟수로 바꾸면 됨)
-            ,vColor=c("감정") # 타일의 컬러
+            ,vSize=c("sentiment") # 타일의 크기 (언급횟수로 바꾸면 됨)
+            ,vColor=c("sentiment") # 타일의 컬러
             ,type="value" # 타일 컬러링 방법
+            ,title="감정"
+            ,title.legend="감정"
             ,fontsize.labels = 9
             ,fontface.labels = c("bold")
             ,fontfamily.labels = "wqy-microhei"
