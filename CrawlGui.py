@@ -32,17 +32,22 @@ class Worker(QThread):
         driver.get('http://www.kyobobook.co.kr/index.laf')
         time.sleep(3)
         driver.implicitly_wait(3)
-        if driver.window_handles[1]:
-            print("팝업 제거.")
+        try:
+            # if driver.window_handles[1]:
             driver.switch_to.window(driver.window_handles[1])
+            print("팝업 제거.")
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
+        except Exception as error :
+            print(error)
+            print("현재 팝업이 없음")
         driver.find_element_by_xpath("//*[@id='searchKeyword']").send_keys(search)
         driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[1]/div[1]/form[2]/div/input").click()
         books = [] # 검색한 책 리스트
         driver.implicitly_wait(3)
         try:
             bookExist = driver.find_element_by_xpath("//*[@id='search_list']/tr[1]/td[2]/div[2]/a")
+            print(bookExist.text)
             # 검색한 책 찾았을 경우
             for i in range(1, 6):
                 try:
@@ -118,7 +123,7 @@ class Worker(QThread):
                 Path("./" + selectedBookName).mkdir(parents=True, exist_ok=True)
                 savedDir = "./" + selectedBookName + "/"
                 savedName = str(reviewNum) + ".txt"
-                print(type(reviewC))
+                # print(type(reviewC))
                 reviewContent = reviewC.get_text()
                 # 데이터 띄어쓰기,줄바꿈 제거
                 reviewContent = " ".join(reviewContent.split())
