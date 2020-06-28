@@ -25,7 +25,7 @@ class Worker(QThread):
         global bookContent
         checkend = False # False : 진행중 , True: 종료됨
         reviewExist = None # True : review 있음, False : 없음
-        path = "C:/dev/chromedriver.exe"
+        path = "chromedriver.exe"
         print(path)
         driver = webdriver.Chrome(path)
         driver.implicitly_wait(5)
