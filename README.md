@@ -35,7 +35,7 @@
   - R을 이용해 구현
   - rShiny 를 이용한 결과 웹 시각화
    <div>
-  <img width="1000" src="https://user-images.githubusercontent.com/58851760/85866068-cb174780-b801-11ea-939a-52ad32f73226.JPG">
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/86137182-f06cc400-bb27-11ea-8442-9e9f2e104800.png">
 </div>
  
 ## 감정분석
@@ -44,7 +44,6 @@
  - 감정사전(긍정어,부정어 사전)을 이용하여 감정분석
  - Shiny 를 이용한 웹 시각화
  <div>
-  <img width="1000" src="https://user-images.githubusercontent.com/58851760/85866067-c94d8400-b801-11ea-8e35-910be07d1e61.JPG">
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/86137172-ed71d380-bb27-11ea-8b68-b04c64ee8dbf.png">
 </div>
-
 
