@@ -198,22 +198,12 @@ result <- list(phi = phi,
                vocab = vocab,
                term.frequency = term.frequency,encoding='UTF-8')
 
-#options(encoding = 'UTF-8')
-# create the JSON object to feed the visualization:
-# json <- createJSON(phi = result$phi, 
-#                    theta = result$theta, 
-#                    doc.length = result$doc.length, 
-#                    vocab = result$vocab, 
-#                    term.frequency = result$term.frequency,encoding='UTF-8')
-#serVis(json, out.dir = 'vis', open.browser = TRUE)
+json <- createJSON(phi = result$phi,
+                   theta = result$theta,
+                   doc.length = result$doc.length,
+                   vocab = result$vocab,
+                   term.frequency = result$term.frequency,encoding='UTF-8')
 
-# out.dir = tempfile()
-# open.browser = interactive()
-# as.gist = FALSE
-# 
-# 
-# dir.create(out.dir)
-# src.dir <- system.file("htmljs", package = "LDAvis")
-# to.copy <- Sys.glob(file.path(src.dir, "*"))
-# file.copy(to.copy, out.dir, overwrite = TRUE, recursive = TRUE)
-# cat(json, file = file(file.path(out.dir, "lda.json"),encoding = "UTF-8"))
+json<-options(encoding='utf-8') # 처음에 한번만 실행하고 그 다음 주석 처리
+serVis(json, out.dir = 'vis', open.browser = TRUE) # 경로에 vis 폴더 생성
+rjson<-readLines("C:/Users/안운빈/Desktop/학교/4-1/종설1/데모/vis/lda.json",encoding='utf-8') # vis 폴더에 있는 json 파일 불러오기
