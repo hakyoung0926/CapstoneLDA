@@ -197,13 +197,3 @@ result <- list(phi = phi,
                doc.length = doc.length,
                vocab = vocab,
                term.frequency = term.frequency,encoding='UTF-8')
-
-json <- createJSON(phi = result$phi,
-                   theta = result$theta,
-                   doc.length = result$doc.length,
-                   vocab = result$vocab,
-                   term.frequency = result$term.frequency,encoding='UTF-8')
-
-json<-options(encoding='utf-8') # 처음에 한번만 실행하고 그 다음 주석 처리
-serVis(json, out.dir = 'vis', open.browser = TRUE) # 경로에 vis 폴더 생성
-rjson<-readLines("C:/Users/안운빈/Desktop/학교/4-1/종설1/데모/vis/lda.json",encoding='utf-8') # vis 폴더에 있는 json 파일 불러오기
