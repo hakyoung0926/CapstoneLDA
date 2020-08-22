@@ -17,11 +17,15 @@ library(tm)
 font_add_google(name='Nanum Gothic', regular.wt=400,bold.wt=700)
 showtext_auto()
 showtext_opts(dpi=112)
-#----------------------다시 시작할때 여기 주석 처리-----------------------------------------------------------------------------------
 
 bookName <- "애쓰지 않고 편안하게"
 setwd(dirname(rstudioapi::getSourceEditorContext()$path)) #불러들일경로 (negative,positive.txt여기에있어야함)
 path <- file.path(dirname(rstudioapi::getSourceEditorContext()$path))
+textCnt<-length(txt)-1        # 리뷰 수
+wordCnt<-length(result$vocab) # 토픽 단어 수
+
+#----------------------다시 시작할때 여기 주석 처리-----------------------------------------------------------------------------------
+
 if(file.exists(file.path(path,bookName,"bookData.RData"))==TRUE){
   print("존재")
   load(file.path(path,bookName,"bookData.RData"))
@@ -83,7 +87,7 @@ ui <- dashboardPage(skin="blue",
                                                 margin-right: auto
                                                 }
                                                 #myChart{
-                                                margin-left: 15em;
+                                                margin-left: 3em;
                                                 }
                                                 .box-header{
                                                 text-align : center;
@@ -94,13 +98,16 @@ ui <- dashboardPage(skin="blue",
                                                 h1{
                                                 padding-left: 1em;
                                                 }
+                                                h3{
+                                                text-align : center;
+                                                }
                                                 '))),
                       tabItems(
                         tabItem(tabName="bookContent",
                                 h1("줄거리"),
                                 hr(),
                                 fluidRow(
-                                  column(6,
+                                  column(4,
                                          imageOutput("image")
                                   ),
                                   box(width = 6,
@@ -112,28 +119,28 @@ ui <- dashboardPage(skin="blue",
                                   box(width=4,
                                       title = "사용된 리뷰 개수",
                                       background ="green",
-                                      h4(44,"개")
+                                      h3(textCnt,"개")
                                   ),
                                   box(width=4,
                                       title = "감정분석 단어 수",
                                       background ="blue",
-                                      h4(1022,"개")
+                                      h3(1022,"개")
                                   ),
                                   box(width=4,
                                       title="추출 토픽 단어 개수",
                                       background="red",
-                                      h4(300,"개")
+                                      h3(wordCnt,"개")
                                   )
                                 )
                         ),
                         tabItem(tabName = "topic",
-                                h1("토픽분석"),
+                                h1("토픽 분석"),
                                 hr(),
                                 visOutput('myChart')
                         ),
                         
                         tabItem(tabName="sentiment",
-                                h1("감정분석"),
+                                h1("감정 분석"),
                                 hr(),
                                 splitLayout(
                                   style = "border: 1px solid silver;border-radius: 4px;",
@@ -154,6 +161,8 @@ server <- function(input, output,session) {
   # })
   output$bookName <- renderText(bookName)
   output$content <- renderText(content)
+  output$textCnt <- renderText(textCnt)
+  output$wordCnt <- renderText(wordCnt)
   output$image <- renderImage({
     list(
       src = file.path(path,bookName,"image.png"),
