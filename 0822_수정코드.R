@@ -45,7 +45,7 @@ json <- createJSON(phi = result$phi,                                      # 2
 
 serVis(json, out.dir = 'vis', open.browser = TRUE) # 경로에 vis 폴더 생성   3
 
-rjson<-readLines("C:/Users/안운빈/Desktop/학교/4-1/종설1/데모/vis/lda.json",encoding='utf-8') # vis 폴더에 있는 json 파일 불러오기  4
+rjson<-readLines(file.path(path,"vis","lda.json"),encoding='utf-8') # vis 폴더에 있는 json 파일 불러오기  4
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -173,7 +173,7 @@ server <- function(input, output,session) {
   },deleteFile = FALSE)
   
   output$myChart <- renderVis({
-    with(result, rjson)
+    with(result, json)
   })
   output$sentiment_result <- renderPlot({pie(sentiment_result, main="감정분석 결과",col=c("skyblue2","lightcoral","palegreen2"),
                                              label=paste(names(sentiment_percent),'', sentiment_percent,"%"),
