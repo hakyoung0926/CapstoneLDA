@@ -30,12 +30,17 @@
     https://sites.google.com/a/chromium.org/chromedriver/downloads
 * [Selenium](https://www.selenium.dev/documentation/ko/) - 브라우저 자동화
 
+## 줄거리
+<div>
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/90977269-15594280-e57f-11ea-9957-0102cc152415.JPG">
+</div>
+
 ## 토픽추출 
   - LDA 알고리즘을 이용해 리뷰의 핵심 키워드인 토픽 추출 
   - R을 이용해 구현
   - rShiny 를 이용한 결과 웹 시각화
    <div>
-  <img width="1000" src="https://user-images.githubusercontent.com/58851760/86137182-f06cc400-bb27-11ea-8442-9e9f2e104800.png">
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/90977290-36ba2e80-e57f-11ea-9cd2-c818edfb3ddb.JPG">
 </div>
  
 ## 감정분석
@@ -44,6 +49,6 @@
  - 감정사전(긍정어,부정어 사전)을 이용하여 감정분석
  - Shiny 를 이용한 웹 시각화
  <div>
-  <img width="1000" src="https://user-images.githubusercontent.com/58851760/86137172-ed71d380-bb27-11ea-8b68-b04c64ee8dbf.png">
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/90977293-4174c380-e57f-11ea-9ace-165e3f73d222.JPG">
 </div>
 
