@@ -32,7 +32,7 @@
 
 ## 줄거리
 <div>
-  <img width="1000" src="https://user-images.githubusercontent.com/58851760/90977269-15594280-e57f-11ea-9957-0102cc152415.JPG">
+  <img width="1000" src="https://user-images.githubusercontent.com/58851760/90977319-78e37000-e57f-11ea-97f0-ccb99259ecfc.png">
 </div>
 
 ## 토픽추출 
